@@ -315,11 +315,18 @@ main(int argc, char *argv[])
 {
     initGEOS(geos_log_stderr, geos_log_stderr);
     log_stderr("VERSION [GEOS %s]\n", GEOSversion());
+#ifdef APPLE
+    const char *libname = "libgeos_c.dylib";
+#else
+    const char *libname = "libgeos_c.so";
+#endif
 
-    geos_lib_handle = dlopen("libgeos_c.so", RTLD_LAZY);
-    if (!geos_lib_handle)
-    {
-        log_stderr("Failed to dynamically load libgeos_c.so");
+    geos_lib_handle = dlopen(libname, RTLD_LAZY);
+    if (!geos_lib_handle) {
+        log_stderr("SETUP [Global] Failed to dynamically load %s\n",libname);
+    }
+    else {
+        log_stderr("SETUP [Global] Loaded %s\n",libname);
     }
 
 
